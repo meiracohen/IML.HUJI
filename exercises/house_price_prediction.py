@@ -23,7 +23,11 @@ def load_data(filename: str):
     Design matrix and response vector (prices) - either as a single
     DataFrame or a Tuple[DataFrame, Series]
     """
-    raise NotImplementedError()
+    data_set = pd.read_csv(filename)
+    data_set.drop(columns=['id'], inplace=True)
+    print(data_set)
+    print(data_set.columns)
+    return data_set
 
 
 def feature_evaluation(X: pd.DataFrame, y: pd.Series, output_path: str = ".") -> NoReturn:
@@ -49,7 +53,7 @@ def feature_evaluation(X: pd.DataFrame, y: pd.Series, output_path: str = ".") ->
 if __name__ == '__main__':
     np.random.seed(0)
     # Question 1 - Load and preprocessing of housing prices dataset
-    raise NotImplementedError()
+    house_price_data_set = load_data("C:\\Users\\Meira Cohen\\IML.HUJI\\datasets\\house_prices.csv",)
 
     # Question 2 - Feature evaluation with respect to response
     raise NotImplementedError()

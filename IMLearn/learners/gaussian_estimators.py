@@ -118,8 +118,8 @@ class UnivariateGaussian:
         inside_exp = 0.0
         for x in X:
             x_center = x - mu
-            inside_exp += x_center*x_center.T / sigma**2
-        before = 1 / (np.sqrt(2 * np.pi * sigma**2))
+            inside_exp += x_center*x_center.T / sigma
+        before = 1 / (np.sqrt(2 * np.pi * sigma))
         log_likelihood = (np.log(before))*X.size - inside_exp / 2
         return log_likelihood
 
@@ -206,13 +206,10 @@ class MultivariateGaussian:
             raise ValueError("Estimator must first be fitted before calling `pdf` function")
         two_pi_powered = (2 * np.pi)**len(X[0])
         sqrt_value = 1 / (np.sqrt(two_pi_powered * np.linalg.det(self.cov_)))
-        X_centered = X
-        for i in range(len(X)):
-            X_centered[i] -= self.mu_
-        inside_exp = np.dot(X_centered, np.dot(np.linalg.inv(self.cov_), np.transpose(X_centered)))
-        exp_value = np.exp(-0.5 * inside_exp)
-        pdf_value = sqrt_value * exp_value
-        return pdf_value
+        X_centered = X - self.mu_.T
+        pdf = [np.dot(x, np.dot(np.linalg.inv(self.cov_), np.transpose(x))) for x in X_centered]
+        pdf = [np.exp(-0.5 * p)*sqrt_value for p in pdf]
+        return pdf
 
     @staticmethod
     def log_likelihood(mu: np.ndarray, cov: np.ndarray, X: np.ndarray) -> float:
