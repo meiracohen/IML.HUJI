@@ -53,7 +53,7 @@ class LinearRegression(BaseEstimator):
         """
         x_matrix = X
         if self.include_intercept_:
-            new_col = np.ones(X.size)
+            new_col = np.ones(X.shape[0])
             x_matrix = np.column_stack((new_col,X))
         pseudo_inverse_of_x = pinv(x_matrix)
         self.coefs_ = pseudo_inverse_of_x @ y
@@ -72,7 +72,11 @@ class LinearRegression(BaseEstimator):
         responses : ndarray of shape (n_samples, )
             Predicted responses of given samples
         """
-        return X @ self.coefs_
+        x_matrix = X
+        if self.include_intercept_:
+            new_col = np.ones(X.shape[0])
+            x_matrix = np.column_stack((new_col, X))
+        return x_matrix @ self.coefs_
 
     def _loss(self, X: np.ndarray, y: np.ndarray) -> float:
         """
@@ -92,4 +96,5 @@ class LinearRegression(BaseEstimator):
             Performance under MSE loss function
         """
         y_pred = self.predict(X)
-        return mean_square_error(y, y_pred)
+        loss = mean_square_error(y, y_pred)
+        return loss
