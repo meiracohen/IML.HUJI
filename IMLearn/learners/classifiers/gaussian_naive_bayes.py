@@ -130,3 +130,4 @@ class GaussianNaiveBayes(BaseEstimator):
         """
         y_pred = self._predict(X)
         return misclassification_error(y, y_pred)
+
